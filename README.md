@@ -7,7 +7,7 @@ explain everything as clear as possible. From the Facebook Developer Setup till 
 
 We will build a chatbot that integrates with facebook as described in the following diagram:
 
-![Productive Deployment](ProductiveDeployment.svg)
+![Productive Deployment](ProductiveDeployment.png)
 
 1. When you will setup your webhook, Facebook will fist call your URL using an http GET request to 
 verify that is you who wanted to set the webhook to this url. You should answer with an http status
@@ -16,6 +16,35 @@ verify that is you who wanted to set the webhook to this url. You should answer 
 2. Then all events from Facebook Messenger will be sent to your webhook using http POST requests.
 
 3. If you want to send something back to your user, you have to make calls back to Facebook.
+
+As a webhook you can only declare a https connection with a valid SSL certificate. This makes it a
+bit more difficult if you want to run your bot locally as you probably don't have a valid 
+certificate on your machine. But here is a workaround with the project [ngrok](https://ngrok.com/).
+In this case the deployment looks a bit different:
+
+![Development Deployment](DevelopmentDeployment.png)
+
+You can run your local `ngrok` process with following command:
+
+```
+$ ngrok http 8080
+```
+
+It will output following lines:
+
+```
+ngrok by @inconshreveable                                (Ctrl+C to quit)
+
+Session Status                online
+Version                       2.2.8
+Region                        United States (us)
+Web Interface                 http://127.0.0.1:4040
+Forwarding                    http://797af51b.ngrok.io -> localhost:8080
+Forwarding                    https://797af51b.ngrok.io -> localhost:8080
+```
+
+Now you have your own ngrok domain and certificate. Just use following url als your webhook:
+`https://797af51b.ngrok.io/callback`
 
 ## Setup at Facebook
 
