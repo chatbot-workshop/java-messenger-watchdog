@@ -10,6 +10,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import ch.apptiva.watchdog.domain.core.service.EventPublisher;
 import ch.apptiva.watchdog.domain.core.service.TestService;
 import ch.apptiva.watchdog.domain.shared.Entity;
 
@@ -50,6 +51,10 @@ public class Website extends Entity {
     changeIntervalTo(Duration.ofMinutes(10));
   }
 
+  public UUID id() {
+    return uuid;
+  }
+
   public UserId userId() {
     return userId;
   }
@@ -62,29 +67,38 @@ public class Website extends Entity {
     return testResults;
   }
 
-  public void test(TestService testService) {
+  public void test(TestService testService, EventPublisher eventPublisher) {
     if (testService == null) {
       throw new IllegalArgumentException(("TestService must be set."));
     }
-    testResults.add(testService.testWebsite(this));
+    TestResult lastTestResult = testResults.peekLast();
+    TestResult newTestResult = testService.testWebsite(this);
+    if (newTestResult.isDifferentFrom(lastTestResult)) {
+      if (newTestResult.httpStatus().isGood()) {
+        eventPublisher.publishWebsiteOnlineEvent(new WebsiteOnlineEvent(this.uuid));
+      } else {
+        eventPublisher.publishWebsiteOfflineEvent(new WebsiteOfflineEvent(this.uuid));
+      }
+    }
+    testResults.add(newTestResult);
   }
 
   public URL url() {
     return url;
   }
 
-  public void testIfOverdue(TestService testService) {
+  public void testIfOverdue(TestService testService, EventPublisher eventPublisher) {
     if (testService == null) {
       throw new IllegalArgumentException(("TestService must be set."));
     }
     TestResult lastTestResult = testResults.peekLast();
     if (lastTestResult == null) {
-      this.test(testService);
+      this.test(testService, eventPublisher);
     } else {
       LocalDateTime now = LocalDateTime.now();
       LocalDateTime targetTime = lastTestResult.dateTime().plus(interval.toMillis(), ChronoUnit.MILLIS);
       if (targetTime.isBefore(now)) {
-        this.test(testService);
+        this.test(testService, eventPublisher);
       }
     }
   }

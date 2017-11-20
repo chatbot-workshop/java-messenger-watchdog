@@ -13,6 +13,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import ch.apptiva.watchdog.domain.core.service.EventPublisher;
 import ch.apptiva.watchdog.domain.core.service.TestService;
 
 import static org.hamcrest.Matchers.is;
@@ -28,6 +29,8 @@ public class WebsiteTest {
   private Deque<TestResult> testResults = new LinkedList<>();
   @Mock
   private TestService testServiceMock;
+  @Mock
+  private EventPublisher eventPublisherMock;
 
   public WebsiteTest() throws MalformedURLException {
   }
@@ -51,7 +54,7 @@ public class WebsiteTest {
   public void successfulTestResult() throws MalformedURLException {
     Website website = new Website(uuid, userId, url, testResults);
     when(testServiceMock.testWebsite(website)).thenReturn(new TestResult(LocalDateTime.now(), new HttpStatus(200), Duration.ofMillis(500)));
-    website.test(testServiceMock);
+    website.test(testServiceMock, eventPublisherMock);
     assertThat(website.testResults().size(), is(1));
     TestResult testResult = website.testResults().peek();
     assertTrue(testResult.httpStatus().isGood());
@@ -62,7 +65,7 @@ public class WebsiteTest {
   public void failTestResult() throws MalformedURLException {
     Website website = new Website(uuid, userId, url, testResults);
     when(testServiceMock.testWebsite(website)).thenReturn(new TestResult(LocalDateTime.now(), new HttpStatus(404), Duration.ofMillis(200)));
-    website.test(testServiceMock);
+    website.test(testServiceMock, eventPublisherMock);
     assertThat(website.testResults().size(), is(1));
     TestResult testResult = website.testResults().peek();
     assertFalse(testResult.httpStatus().isGood());

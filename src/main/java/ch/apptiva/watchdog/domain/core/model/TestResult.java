@@ -28,4 +28,16 @@ public class TestResult extends ValueObject {
   public Duration responseTime() {
     return responseTime;
   }
+
+  public boolean isOk() {
+    return httpStatus().isGood();
+  }
+
+  public boolean isDifferentFrom(TestResult lastTestResult) {
+    if (lastTestResult == null) {
+      return true;
+    } else {
+      return isOk() != lastTestResult.isOk();
+    }
+  }
 }

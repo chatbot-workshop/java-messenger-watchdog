@@ -1,15 +1,18 @@
 package ch.apptiva.watchdog.domain.core.repository;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import ch.apptiva.watchdog.domain.core.model.UserId;
 import ch.apptiva.watchdog.domain.core.model.Website;
 
 public interface WebsiteRepository {
 
-  public void persistWebsite(Website website);
+  public void persist(Website website);
 
-  public Collection<Website> findWebsitesByUser(UserId userId);
+  public Website findById(UUID uuid);
+
+  public Collection<Website> findByUser(UserId userId);
 
   public Collection<Website> findAll();
 }
