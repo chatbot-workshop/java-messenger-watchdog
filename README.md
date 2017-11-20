@@ -1,5 +1,7 @@
 # Java Messenger Watchdog
 
+[![Build Status](https://travis-ci.org/chatbot-workshop/java-messenger-watchdog.svg?branch=master)](https://travis-ci.org/chatbot-workshop/java-messenger-watchdog)
+
 This is an simple app to demonstrate how implement a chatbot for messenger in Java. I try to
 explain everything as clear as possible. From the Facebook Developer Setup till deployment.
 
