@@ -88,3 +88,33 @@ The next section is about webhooks. You should create a webhook and enter follow
 Finally you should go back to the app dashboard and find the app secret. You will need it in your
 java project.
 
+## Run this app
+
+This app uses [gradle](https://gradle.org/) to build. You can import the project to your Eclipse
+or IntelliJ. To run the app you simply start the `main` method from
+`ch.apptiva.watchdog.Application` with following environment variables:
+
+| Variable | Description |
+| ---- | ---- |
+|`messenger4j.pageAccessToken`| The previously generated access token from your Facebook app. This token makes sure, that only you can post messages in the name of your Facebook page. |
+|`messenger4j.appSecret`| You find this secret on your Facebook app Dashboard. It identifies you as the owner of the app. |
+|`messenger4j.verifyToken`| This token is sent to you when someone sets a new webhook to your url. It makes sure no one else can use your process to run his own chatbot. |
+
+## Architecture overview
+
+I tried to apply a [Hexagonal Architecture Style](http://alistair.cockburn.us/Hexagonal+architecture)
+This made it easy to separate the domain model from the facebook API usage. So you can focus on
+how the API is used if you are not interested in the watchdog functionality. 
+
+There are some main packages which I will describe here briefly:
+
+| Package | Description |
+| ---- | ---- |
+|`ch.apptiva.watchdog.domain` | All the domain stuff that describes how the watchdog logic behaves |
+|`ch.apptiva.watchdog.adapter` | Everything technology centric. Like the facebook API, Event Bus... |
+|`ch.apptiva.watchdog.adapter.messenger` | Here you find how the facebook API is used. Everything that goes to or comes from Facebook is running through this package. |
+|`ch.apptiva.watchdog.adapter.EventBus` | There are some domain events published from the domain logic. This package contains the infrastructure code for this. |
+|`ch.apptiva.watchdog.adapter.timer` | Setup for a spring timer which triggers domain logic from time to time. |
+|`ch.apptiva.watchdog.adapter.persistence` | The most simple implementation of a repository holding the webpages that watchdog cares about. |
+
+For the rest I hope the code speaks for itself...
