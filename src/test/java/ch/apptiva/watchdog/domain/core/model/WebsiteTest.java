@@ -16,7 +16,9 @@ import java.util.UUID;
 import ch.apptiva.watchdog.domain.core.service.EventPublisher;
 import ch.apptiva.watchdog.domain.core.service.TestService;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -84,5 +86,27 @@ public class WebsiteTest {
 
     assertFalse(firstWebsite.equals(secondWebsite));
     assertTrue(secondWebsite.equals(equalSecondWebsite));
+  }
+
+  @Test
+  public void testTestResultSize() {
+    Website website = new Website(url, userId);
+    assertThat(website.testResults().size(), is(0));
+    // add 20 test results
+    when(testServiceMock.testWebsite(website)).thenAnswer(m -> {
+      TestResult result = new TestResult(LocalDateTime.now(), new HttpStatus(200), Duration.ofMillis((long) (1000 * Math.random())));
+      return result;
+    });
+    for (int i = 0; i < 20; i++) {
+      website.test(testServiceMock, eventPublisherMock);
+    }
+    assertThat(website.testResults().size(), is(20));
+
+    TestResult firstResult = website.testResults().peek();
+
+    assertThat(website.testResults().size(), is(20));
+    website.test(testServiceMock,eventPublisherMock);
+    assertThat(website.testResults().size(), is(20));
+    assertFalse(website.testResults().contains(firstResult));
   }
 }

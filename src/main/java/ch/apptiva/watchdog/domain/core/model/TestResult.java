@@ -40,4 +40,23 @@ public class TestResult extends ValueObject {
       return isOk() != lastTestResult.isOk();
     }
   }
+
+  @Override
+  public int hashCode() {
+    return 13 * dateTime.hashCode() * httpStatus.hashCode() * responseTime.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    } else if (obj instanceof TestResult) {
+      TestResult other = (TestResult) obj;
+      return dateTime.equals(other.dateTime)
+          && httpStatus.equals(other.httpStatus)
+          && responseTime.equals(other.responseTime);
+    } else {
+      return false;
+    }
+  }
 }

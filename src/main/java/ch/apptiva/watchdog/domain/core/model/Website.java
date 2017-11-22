@@ -1,5 +1,7 @@
 package ch.apptiva.watchdog.domain.core.model;
 
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalField;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 import ch.apptiva.watchdog.domain.core.service.EventPublisher;
@@ -19,15 +22,15 @@ public class Website extends Entity {
   private final UUID uuid;
   private final UserId userId;
   private final URL url;
-  private final Deque<TestResult> testResults;
+  private final Queue<TestResult> testResults;
 
   private Duration interval;
 
   public Website (URL url, UserId userId) {
-    this(UUID.randomUUID(), userId, url, new LinkedList<TestResult>());
+    this(UUID.randomUUID(), userId, url, new CircularFifoQueue<TestResult>(20));
   }
 
-  public Website (UUID uuid, UserId userId, URL url, Deque<TestResult> testResults) {
+  public Website (UUID uuid, UserId userId, URL url, Queue<TestResult> testResults) {
     if (uuid == null) {
       throw new IllegalArgumentException("UUID must be set.");
     }
@@ -63,7 +66,7 @@ public class Website extends Entity {
     this.interval = interval;
   }
 
-  public Deque<TestResult> testResults() {
+  public Queue<TestResult> testResults() {
     return testResults;
   }
 
@@ -71,7 +74,7 @@ public class Website extends Entity {
     if (testService == null) {
       throw new IllegalArgumentException(("TestService must be set."));
     }
-    TestResult lastTestResult = testResults.peekLast();
+    TestResult lastTestResult = testResults.peek();
     TestResult newTestResult = testService.testWebsite(this);
     if (newTestResult.isDifferentFrom(lastTestResult)) {
       if (newTestResult.httpStatus().isGood()) {
@@ -80,6 +83,10 @@ public class Website extends Entity {
         eventPublisher.publishWebsiteOfflineEvent(new WebsiteOfflineEvent(this.uuid));
       }
     }
+    addTestResult(newTestResult);
+  }
+
+  private void addTestResult(TestResult newTestResult) {
     testResults.add(newTestResult);
   }
 
@@ -91,7 +98,7 @@ public class Website extends Entity {
     if (testService == null) {
       throw new IllegalArgumentException(("TestService must be set."));
     }
-    TestResult lastTestResult = testResults.peekLast();
+    TestResult lastTestResult = testResults.peek();
     if (lastTestResult == null) {
       this.test(testService, eventPublisher);
     } else {
