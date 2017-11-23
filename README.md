@@ -98,9 +98,9 @@ or IntelliJ. To run the app you simply start the `main` method from
 
 | Variable | Description |
 | ---- | ---- |
-|`messenger4j.pageAccessToken`| The previously generated access token from your Facebook app. This token makes sure, that only you can post messages in the name of your Facebook page. |
-|`messenger4j.appSecret`| You find this secret on your Facebook app Dashboard. It identifies you as the owner of the app. |
-|`messenger4j.verifyToken`| This token is sent to you when someone sets a new webhook to your url. It makes sure no one else can use your process to run his own chatbot. |
+|`messenger.pageAccessToken`| The previously generated access token from your Facebook app. This token makes sure, that only you can post messages in the name of your Facebook page. |
+|`messenger.appSecret`| You find this secret on your Facebook app Dashboard. It identifies you as the owner of the app. |
+|`messenger.verifyToken`| This token is sent to you when someone sets a new webhook to your url. It makes sure no one else can use your process to run his own chatbot. |
 
 ## Architecture overview
 
