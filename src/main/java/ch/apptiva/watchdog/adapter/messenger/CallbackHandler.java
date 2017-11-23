@@ -35,13 +35,19 @@ import static com.github.messenger4j.MessengerPlatform.MODE_REQUEST_PARAM_NAME;
 import static com.github.messenger4j.MessengerPlatform.SIGNATURE_HEADER_NAME;
 import static com.github.messenger4j.MessengerPlatform.VERIFY_TOKEN_REQUEST_PARAM_NAME;
 
+/**
+ * This Controller receives all Facebook Messenger hooks from your chat users. There are two entry points:
+ *
+ * 1. GET Request: Used only for the registration of the hook.
+ * 2. POST Request: Used for all Facebook hooks from text messages till uploads.
+ *
+ * We use the library messenger4j to work with the messenger API. This frees us from parsing and composing
+ * lots of json stuff.
+ */
 @RestController
 @RequestMapping("/callback")
 public class CallbackHandler {
-
   private static final Logger LOGGER = LoggerFactory.getLogger(CallbackHandler.class);
-
-
   private final MessengerReceiveClient receiveClient;
   private final MessengerSendClient sendClient;
   private final WebsiteRepository websiteRepository;
@@ -54,9 +60,56 @@ public class CallbackHandler {
     this.receiveClient = MessengerPlatform.newReceiveClientBuilder(appSecret, verifyToken)
         .onEchoMessageEvent(newEchoMessageEventHandler())
         .onTextMessageEvent(newTextMessageEventHandler())
+        // You may register here many more handlers to make an even better bot.
         .build();
     this.sendClient = sendClient;
     this.websiteRepository = websiteRepository;
+  }
+
+  /**
+   * This will be called when you register the webhook. Use it to check the verifyToken.
+   * @param mode
+   * @param verifyToken Verify Token which you have been entering at registering the webhook.
+   * @param challenge
+   * @return
+   */
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
+                                              @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
+                                              @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
+
+    LOGGER.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode,
+        verifyToken, challenge);
+    try {
+      return ResponseEntity.ok(this.receiveClient.verifyWebhook(mode, verifyToken, challenge));
+    } catch (MessengerVerificationException e) {
+      LOGGER.warn("Webhook verification failed: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+  }
+
+  /**
+   * This is called on every event that is happening in your chat. This is the place where you answer
+   * every request from your users.
+   * @param payload
+   * @param signature
+   * @return
+   */
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<Void> handleCallback(@RequestBody final String payload,
+                                             @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
+    LOGGER.info("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
+    try {
+      this.receiveClient.processCallbackPayload(payload, signature);
+      LOGGER.debug("Processed callback payload successfully");
+      return ResponseEntity.status(HttpStatus.OK).build();
+    } catch (MessengerVerificationException e) {
+      LOGGER.warn("Processing of callback payload failed: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    } catch (Exception e) {
+      LOGGER.error("Error processing payload: " + payload, e);
+      return ResponseEntity.status(HttpStatus.OK).build();
+    }
   }
 
   private EchoMessageEventHandler newEchoMessageEventHandler() {
@@ -97,37 +150,5 @@ public class CallbackHandler {
 
   private void sendTextMessage(String senderId, String text) throws MessengerApiException, MessengerIOException {
     this.sendClient.sendTextMessage(senderId, text);
-  }
-
-  @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
-                                              @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
-                                              @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
-
-    LOGGER.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode,
-        verifyToken, challenge);
-    try {
-      return ResponseEntity.ok(this.receiveClient.verifyWebhook(mode, verifyToken, challenge));
-    } catch (MessengerVerificationException e) {
-      LOGGER.warn("Webhook verification failed: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-    }
-  }
-
-  @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<Void> handleCallback(@RequestBody final String payload,
-                                             @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
-    LOGGER.info("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
-    try {
-      this.receiveClient.processCallbackPayload(payload, signature);
-      LOGGER.debug("Processed callback payload successfully");
-      return ResponseEntity.status(HttpStatus.OK).build();
-    } catch (MessengerVerificationException e) {
-      LOGGER.warn("Processing of callback payload failed: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    } catch (Exception e) {
-      LOGGER.error("Error processing payload: " + payload, e);
-      return ResponseEntity.status(HttpStatus.OK).build();
-    }
   }
 }
