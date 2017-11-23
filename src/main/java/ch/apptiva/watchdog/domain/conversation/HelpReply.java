@@ -10,6 +10,6 @@ public class HelpReply extends TextReplyIntent {
         "Wenn du den aktuellen Status wissen möchtest, frage mich etwas wie:",
         "Sind meine Seiten noch online? / Wie läuft es?",
         "Wenn du schlussendlich eine Seite nicht mehr überwachen möchtest, gib mir so Bescheid:",
-        "Stoppe eine Überwachung.");
+        "Stoppe eine Überwachung von https://www.apptiva.ch/.");
   }
 }

@@ -57,10 +57,12 @@ public class IntentAnalyzerTest {
   }
 
   @Test
-  public void notWatchWebsiteIntent() {
-    Intent intent = IntentAnalyzer.analyzeIntent("Das ist eine lustige website: https://www.apptiva.ch.");
-    assertFalse(intent instanceof WatchWebsite);
-    intent = IntentAnalyzer.analyzeIntent("Bitte vergiss https://www.apptiva.ch");
-    assertFalse(intent instanceof WatchWebsite);
+  public void unwatchWebsiteIntent() {
+    Intent intent = IntentAnalyzer.analyzeIntent("Vergiss bitte https://www.google.com/");
+    assertTrue(intent instanceof UnwatchWebsite);
+    intent = IntentAnalyzer.analyzeIntent("Please unwatch https://www.google.com/");
+    assertTrue(intent instanceof UnwatchWebsite);
+    intent = IntentAnalyzer.analyzeIntent("Stoppe eine Überwachung von https://www.apptiva.ch/.");
+    assertTrue(intent instanceof UnwatchWebsite);
   }
 }

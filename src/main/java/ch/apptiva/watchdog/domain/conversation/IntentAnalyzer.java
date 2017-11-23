@@ -14,7 +14,12 @@ public class IntentAnalyzer {
   public static Intent analyzeIntent(String message) {
     Intent intent = new HelpReply();
     try {
-      if (message.toLowerCase().matches(".*(auge|schau|watch|wach).*")) {
+      if (message.toLowerCase().matches(".*(vergis|unwatch|stop).*")) {
+        Optional<URL> url = extractURL(message);
+        if (url.isPresent()) {
+          intent = new UnwatchWebsite(url.get());
+        }
+      } else if (message.toLowerCase().matches(".*(auge|schau|watch|wach).*")) {
         Optional<URL> url = extractURL(message);
         if (url.isPresent()) {
           intent = new WatchWebsite(url.get());
