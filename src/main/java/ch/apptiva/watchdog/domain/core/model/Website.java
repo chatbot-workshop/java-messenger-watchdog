@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalField;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,11 +20,13 @@ import ch.apptiva.watchdog.domain.core.service.TestService;
 import ch.apptiva.watchdog.domain.shared.Entity;
 
 public class Website extends Entity {
+  private final static int FAILED_TEST_FIRE_EVENT_TREASHHOLD = 3;
 
   private final UUID uuid;
   private final UserId userId;
   private final URL url;
   private final Queue<TestResult> testResults;
+  private int failedTestResultConter = 0;
 
   private Duration interval;
 
@@ -50,6 +54,13 @@ public class Website extends Entity {
       throw new IllegalArgumentException("TestResults must be set.");
     }
     this.testResults = testResults;
+    for (TestResult testResult: testResults) {
+      if (testResult.isOk()) {
+        failedTestResultConter = 0;
+      } else {
+        failedTestResultConter++;
+      }
+    }
 
     changeIntervalTo(Duration.ofMinutes(10));
   }
@@ -77,10 +88,14 @@ public class Website extends Entity {
     TestResult lastTestResult = testResults.peek();
     TestResult newTestResult = testService.testWebsite(this);
     if (newTestResult.isDifferentFrom(lastTestResult)) {
-      if (newTestResult.httpStatus().isGood()) {
+      if (newTestResult.isOk()) {
+        failedTestResultConter = 0;
         eventPublisher.publishWebsiteOnlineEvent(new WebsiteOnlineEvent(this.uuid));
       } else {
-        eventPublisher.publishWebsiteOfflineEvent(new WebsiteOfflineEvent(this.uuid));
+        failedTestResultConter++;
+        if (failedTestResultConter >= FAILED_TEST_FIRE_EVENT_TREASHHOLD) {
+          eventPublisher.publishWebsiteOfflineEvent(new WebsiteOfflineEvent(this.uuid));
+        }
       }
     }
     addTestResult(newTestResult);

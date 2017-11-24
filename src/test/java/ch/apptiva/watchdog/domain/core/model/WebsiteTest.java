@@ -16,10 +16,13 @@ import java.util.UUID;
 import ch.apptiva.watchdog.domain.core.service.EventPublisher;
 import ch.apptiva.watchdog.domain.core.service.TestService;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -105,8 +108,33 @@ public class WebsiteTest {
     TestResult firstResult = website.testResults().peek();
 
     assertThat(website.testResults().size(), is(20));
-    website.test(testServiceMock,eventPublisherMock);
+    website.test(testServiceMock, eventPublisherMock);
     assertThat(website.testResults().size(), is(20));
     assertFalse(website.testResults().contains(firstResult));
+  }
+
+  @Test
+  public void expectEventToBeFiredOnlyAfter3FailedTests() {
+    Website website = new Website(url, userId);
+
+    // first execution is successful, fire event
+    when(testServiceMock.testWebsite(website)).thenReturn(new TestResult(LocalDateTime.now(), new HttpStatus(200), Duration.ofMillis(300)));
+    website.test(testServiceMock, eventPublisherMock);
+    verify(eventPublisherMock).publishWebsiteOnlineEvent(any(WebsiteOnlineEvent.class));
+
+    // record 3 test failed executions, fire event
+    when(testServiceMock.testWebsite(website)).thenReturn(new TestResult(LocalDateTime.now(), new HttpStatus(404), Duration.ofMillis(300)));
+    website.test(testServiceMock, eventPublisherMock);
+    website.test(testServiceMock, eventPublisherMock);
+    website.test(testServiceMock, eventPublisherMock);
+    verify(eventPublisherMock).publishWebsiteOfflineEvent(any(WebsiteOfflineEvent.class));
+
+    // now we go online again, fire event
+    when(testServiceMock.testWebsite(website)).thenReturn(new TestResult(LocalDateTime.now(), new HttpStatus(200), Duration.ofMillis(300)));
+    website.test(testServiceMock, eventPublisherMock);
+    verify(eventPublisherMock).publishWebsiteOnlineEvent(any(WebsiteOnlineEvent.class));
+
+    // there should be no more other interactions with the event publisher
+    verifyNoMoreInteractions(eventPublisherMock);
   }
 }
