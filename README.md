@@ -45,6 +45,25 @@ Now you can create a page by clicking at the verry bottom of the left menu:
 
 <img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage1.png" width="200">
 
+Now you have to choose a page type. It does not matter what you choose. You can create a chatbot for
+every page type.
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage2.png" width="400">
+
+When you finished the input, click on `Get Started`. You will be forwarded to the setup assistant.
+Fill out as much as you need. After some steps you will have your own Facebook page.
+
+You can make it people easyer to get in touch with your chatbot by adding a Messenger button to your
+page:
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage3.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage4.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage5.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage6.png" width="400">
+
+Now you can open the messenger window by testing your new button:
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage7.png" width="400">
 
 
 ### Create a Facebook app
