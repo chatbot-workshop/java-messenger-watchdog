@@ -15,11 +15,12 @@ There are some things you have to do before we can start the workshop.
 > This is very important because in some cases you have to wait for Facebook approval for a day or so. 
 > So we can't do this just at the workshop itself.
 
-The homework consists of this steps:
+The homework consists of following things you should create before the workshop:
 
-- Create a facebook account
-- Create a facebook developer account
-- Create a facebook app
+- Facebook account
+- Facebook developer account
+- Facebook page
+- Facebook app
 
 To make us more efficient at the workshop you should also be familiar with:
 
@@ -27,14 +28,25 @@ To make us more efficient at the workshop you should also be familiar with:
 - Your IDE (preferably IntelliJ IDEA or Eclipse)
 - Gradle as your build tool
 
-### Create a facebook account
+### Create a Facebook account
 I think I don't have to explain this step. I just wanted to be clear on this that you need it.
 
-### Create a facebook developer account
+### Create a Facebook developer account
 Go to [https://developers.facebook.com](https://developers.facebook.com) and create a developer
 account.
 
-### Create a facebook app
+### Facebook page
+Your chatbot will run on a Facebook page. Therefore we create our own page for this bot. Go to
+[Facebook](https://www.facebook.com/) and click the icon on the top left corner:
+
+![Facebook Icon](createFacebookPage0.png)
+
+Now you can create a page by clicking at the verry bottom of the left menu:
+
+![Click create page](createFacebookPage1.png | width=200)
+ 
+
+### Create a Facebook app
 This step is a bit more complicated. Therefore we will go through it step by step.
 
 First go to [https://developers.facebook.com](https://developers.facebook.com) with your newly created
@@ -43,6 +55,8 @@ developer account. Click on `My Apps` and then `Add a New App`.
 
 Now enter the display name and contact e-mail of your app and click `Create App ID`.
 ![Create App ID](createANewAppId.png)
+
+
 
 ## Broad overview
 
