@@ -1,12 +1,48 @@
 # Java Messenger Watchdog
 
-[![Build Status](https://travis-ci.org/chatbot-workshop/java-messenger-watchdog.svg?branch=master)](https://travis-ci.org/chatbot-workshop/java-messenger-watchdog)
-
 The Java Messenger Watchdog helps you to keep an eye on your Websites. As soon as a watched site
 is down, the watchdog will bark at you on Facebook Messenger.
 
-This is a simple app to demonstrate how to implement a chatbot for messenger in Java. I try to
-explain everything as clearly as possible. From the Facebook Developer Setup till deployment.
+[![Build Status](https://travis-ci.org/chatbot-workshop/java-messenger-watchdog.svg?branch=master)](https://travis-ci.org/chatbot-workshop/java-messenger-watchdog)
+
+This project was used for a workshop I gave for the ![Java User Group Switzerland](https://www.jug.ch/).
+Therefore this readme is made to guide you through the process of bringing this chatbot to life and
+continue to implement your own ideas.
+
+## Homework before the workshop starts
+There are some things you have to do before we can start the workshop.
+
+> This is very important because in some cases you have to wait for Facebook approval for a day or so. 
+> So we can't do this just at the workshop itself.
+
+The homework consists of this steps:
+
+- Create a facebook account
+- Create a facebook developer account
+- Create a facebook app
+
+To make us more efficient at the workshop you should also be familiar with:
+
+- The java programming language
+- Your IDE (preferably IntelliJ IDEA or Eclipse)
+- Gradle as your build tool
+
+### Create a facebook account
+I think I don't have to explain this step. I just wanted to be clear on this that you need it.
+
+### Create a facebook developer account
+Go to [https://developers.facebook.com](https://developers.facebook.com) and create a developer
+account.
+
+### Create a facebook app
+This step is a bit more complicated. Therefore we will go through it step by step.
+
+First go to [https://developers.facebook.com](https://developers.facebook.com) with your newly created
+developer account. Click on `My Apps` and then `Add a New App`.
+![create Facebook App](createFacebookApp.png)
+
+Now enter the display name and contact e-mail of your app and click `Create App ID`.
+![Create App ID](createANewAppId.png)
 
 ## Broad overview
 
@@ -49,24 +85,6 @@ Forwarding                    https://797af51b.ngrok.io -> localhost:8080
 
 Now you have your own ngrok domain and certificate. Just use following url als your webhook:
 `https://797af51b.ngrok.io/callback`
-
-## Setup at Facebook
-
-There are a few things that have to be done before you can start:
-
-### Facebook account
-Of course you need a Facebook account.
-
-### Facebook page
-Facebook Chatbots are always bound to a Facebook page. Create a new page specifically for your bot.
-
-### Developer account
-You need a developer account to create a Facebook App. Go to (https://developers.facebook.com/) to 
-create yours.
-
-### Facebook app
-At last you need a Facebook app. On (https://developers.facebook.com/) at the upper right corner
-you can create your new app.
 
 ### Connect app and page
 Now your app needs to be connected to your page. Therefore click `add product` and choose
