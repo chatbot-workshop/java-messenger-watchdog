@@ -39,12 +39,13 @@ account.
 Your chatbot will run on a Facebook page. Therefore we create our own page for this bot. Go to
 [Facebook](https://www.facebook.com/) and click the icon on the top left corner:
 
-![Facebook Icon](createFacebookPage0.png)
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage0.png" width="200">
 
 Now you can create a page by clicking at the verry bottom of the left menu:
 
-![Click create page](createFacebookPage1.png | width=200)
- 
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage1.png" width="200">
+
+
 
 ### Create a Facebook app
 This step is a bit more complicated. Therefore we will go through it step by step.
