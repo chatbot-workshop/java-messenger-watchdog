@@ -15,12 +15,13 @@ There are some things you have to do before we can start the workshop.
 > This is very important because in some cases you have to wait for Facebook approval for a day or so. 
 > So we can't do this just at the workshop itself.
 
-The homework consists of following things you should create before the workshop:
+The homework consists of following things you should do before the workshop:
 
-- Facebook account
-- Facebook developer account
-- Facebook page
-- Facebook app
+- Create Facebook account
+- Create Facebook developer account
+- Create Facebook page
+- Create Facebook app
+- Checkout this project
 
 To make us more efficient at the workshop you should also be familiar with:
 
@@ -67,15 +68,50 @@ Now you can open the messenger window by testing your new button:
 
 
 ### Create a Facebook app
-This step is a bit more complicated. Therefore we will go through it step by step.
+With a Facebook app you get the access to various APIs. For our chatbot we need the messenger APIs.
 
 First go to [https://developers.facebook.com](https://developers.facebook.com) with your newly created
 developer account. Click on `My Apps` and then `Add a New App`.
 ![create Facebook App](createFacebookApp.png)
 
 Now enter the display name and contact e-mail of your app and click `Create App ID`.
-![Create App ID](createANewAppId.png)
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createANewAppId.png" width="500">
 
+On your newly created app click `+ Add Product` and choose Messenger.
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/addMessengerAPI.png" width="500">
+
+### Get the code
+
+Now you should check out this project and import it to your IDE. Build the project in the IDE or enter
+following command in your shell: `./gradlew build`. If you got no error in the IDE and a successful build
+you are ready to start the workshop.
+
+
+TODO: Make following things better... 
+
+### Connect Facebook app to your chatbot
+
+
+At `Token Generation` you can choose your site and let facebook generate a **page access token**. You
+will need this token later.
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/addMessengerAPI.png" width="500">
+
+The next section is about webhooks. You should create a webhook and enter following parameters:
+
+- Webhook-URL: The URL to your server. For example `https://my-app.mydomain.com/callback`. If you 
+  run your app on your local development machine you should use `ngrok`. You will learn more about
+  this later.
+
+- **Verify token**: A token string of your choice. Facebook will send you this token to verify the
+  webhook setting. This protects you against other sites who may want to use your bot without your
+  permission.
+
+- Finally you choose your field subscriptions. Here you can define which events should be forwarded
+  to your webhook.
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/setupWebhook.png" width="500">
 
 
 ## Broad overview
@@ -121,23 +157,6 @@ Now you have your own ngrok domain and certificate. Just use following url als y
 `https://797af51b.ngrok.io/callback`
 
 ### Connect app and page
-Now your app needs to be connected to your page. Therefore click `add product` and choose
-`Messenger`.
-
-At `Key generation` you can choose your site and let facebook generate a **page access token**. You
-need this token later.
-
-The next section is about webhooks. You should create a webhook and enter following parameters:
-
-- Webhook-URL: The URL to your server. For example `https://my-app.mydomain.com/callback`. If you 
-  run your app on your local development machine you should use `ngrok`.
-
-- **Verify token**: A token string of your choice. Facebook will send you this token to verify the
-  webhook setting. This protects you against other sites who may want to use your bot without your
-  permission.
-
-- Finally you choose your field subscriptions. Here you can define which events should be forwarded
-  to your webhook.
   
 Finally you should go back to the app dashboard and find the **app secret**. You will need it in your
 java project.
