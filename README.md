@@ -86,9 +86,23 @@ On your newly created app click `+ Add Product` and choose Messenger.
 Now you should check out this project and import it to your IDE. Build the project in the IDE or enter
 following command in your shell: `./gradlew build`. If you got no error in the IDE and a successful build
 you are ready to start the workshop.
+ 
 
+### Communication between your app and Facebook
 
-TODO: Make following things better... 
+This diagram shows how your chatbot will reach facebook and vice versa:
+
+![Productive Deployment](ProductiveDeployment.png)
+
+1. First there is a verification step before Facebook is willing to communicate with your chatbot.
+Facebook will fist call your chatbot using an http GET request to verify that is you who wanted
+to set the webhook to this url. You should answer with an http status 200 to tell Facebook that
+it is ok to connect the Facebook App with your chatbot.
+
+2. Then all events from Facebook Messenger will be sent to your webhook using http POST requests.
+
+3. If you want to send something back to your user, you have to make calls back to Facebook.
+
 
 ### Connect Facebook app to your chatbot
 
@@ -115,18 +129,6 @@ The next section is about webhooks. You should create a webhook and enter follow
 
 
 ## Broad overview
-
-We will build a chatbot that integrates with facebook as described in the following diagram:
-
-![Productive Deployment](ProductiveDeployment.png)
-
-1. When you will setup your webhook, Facebook will fist call your URL using an http GET request to 
-verify that is you who wanted to set the webhook to this url. You should answer with an http status
-200 if the webhook may be configured.
-
-2. Then all events from Facebook Messenger will be sent to your webhook using http POST requests.
-
-3. If you want to send something back to your user, you have to make calls back to Facebook.
 
 As a webhook you can only declare a https connection with a valid SSL certificate. Therefore you need to 
 have a valid certificate on your machine. This can be setup with the project [ngrok](https://ngrok.com/).
