@@ -86,57 +86,39 @@ On your newly created app click `+ Add Product` and choose Messenger.
 Now you should check out this project and import it to your IDE. Build the project in the IDE or enter
 following command in your shell: `./gradlew build`. If you got no error in the IDE and a successful build
 you are ready to start the workshop.
- 
+
+> `EOHW`: End Of Home Work. The homework part is done here. We are looking at following things at the 
+> workshop. 
 
 ### Communication between your app and Facebook
 
-This diagram shows how your chatbot will reach facebook and vice versa:
+First we want to have a look at how the Facebook API looks like.
+This diagram shows how your chatbot will talk to facebook and vice versa:
 
 ![Productive Deployment](ProductiveDeployment.png)
 
 1. First there is a verification step before Facebook is willing to communicate with your chatbot.
-Facebook will fist call your chatbot using an http GET request to verify that is you who wanted
-to set the webhook to this url. You should answer with an http status 200 to tell Facebook that
-it is ok to connect the Facebook App with your chatbot.
+Facebook will fist call your chatbot using an http GET request to your **webhook** with a secret that
+only you know. The secret is called **verify token**. If the correct **verify token** is sent, you
+should answer with an http status 200.
 
-2. Then all events from Facebook Messenger will be sent to your webhook using http POST requests.
+2. Then all events from Facebook Messenger will be sent to you using http POST requests. This requests
+will all arrive at your **webhook**. 
 
-3. If you want to send something back to your user, you have to make calls back to Facebook.
+3. If you want to send a message back to your user, you have to perform separate calls to Facebook.
+This time you have to verify that it is really you calling. This is done by attaching the **page access
+token**.
 
-
-### Connect Facebook app to your chatbot
-
-
-At `Token Generation` you can choose your site and let facebook generate a **page access token**. You
-will need this token later.
-
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/addMessengerAPI.png" width="500">
-
-The next section is about webhooks. You should create a webhook and enter following parameters:
-
-- Webhook-URL: The URL to your server. For example `https://my-app.mydomain.com/callback`. If you 
-  run your app on your local development machine you should use `ngrok`. You will learn more about
-  this later.
-
-- **Verify token**: A token string of your choice. Facebook will send you this token to verify the
-  webhook setting. This protects you against other sites who may want to use your bot without your
-  permission.
-
-- Finally you choose your field subscriptions. Here you can define which events should be forwarded
-  to your webhook.
-
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/setupWebhook.png" width="500">
-
-
-## Broad overview
-
-As a webhook you can only declare a https connection with a valid SSL certificate. Therefore you need to 
-have a valid certificate on your machine. This can be setup with the project [ngrok](https://ngrok.com/).
-In this case the deployment looks a bit different:
+Now that you are familiar with those key concepts, we can introduce another extra layer of complexity:
+Facebook only talks through https to hosts with a valid SSL certificate. Your local development machine 
+probably doesn't have a public domain and certificate. But you can use a service called
+[ngrok](https://ngrok.com/) to solve this problem. Now the communication channel for development
+environment looks like this:
 
 ![Development Deployment](DevelopmentDeployment.png)
 
-You can run your local `ngrok` process with following command:
+[Ngrok](https://ngrok.com/) basically creates a new domain on the fly and routes all the traffic to
+your machine. You can download ngrok from their website and run with following command:
 
 ```
 $ ngrok http 8080
@@ -158,10 +140,34 @@ Forwarding                    https://797af51b.ngrok.io -> localhost:8080
 Now you have your own ngrok domain and certificate. Just use following url als your webhook:
 `https://797af51b.ngrok.io/callback`
 
-### Connect app and page
-  
-Finally you should go back to the app dashboard and find the **app secret**. You will need it in your
-java project.
+
+### Connect Facebook app to your chatbot
+
+Next we are going to actually connect your chatbot. To do this we have to set some properties and
+tell Facebook where your chatbot is living.
+
+At the Facebook app dashboard find the **app secret**. Take this secret and set it in the
+file `application.properties`.
+
+Also in your Facebook App look for **Token Generation**. There you can select your site and let 
+facebook generate a **page access token**. Save this token at your file `application.properties`.
+
+Finally create your own personal string to use as a **verify token** and also set it in
+`application.properties`. In this README I used `watchdog`.
+
+Now you should start `ngrok` and use your IDE or `gradle` to start the chatbot. If it is running
+you make the last configuration in your Facebook app: You set the webhook:
+
+- **Webhook-URL**: The URL to your server. For example `https://my-app.mydomain.com/callback`. If you 
+  run your app on your local development machine you should use the domain that `ngrok` is telling you.
+
+- **Verify token**: The same string you previously set in `application.properties`.
+
+- Finally you choose your field subscriptions. Here you can define which events should be forwarded
+  to your webhook.
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/setupWebhook.png" width="500">
+
 
 ## Run this app
 
