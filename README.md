@@ -12,10 +12,10 @@ continue to implement your own ideas.
 ## Homework before the workshop starts
 There are some things you have to do before we can start the workshop.
 
-> This is very important because in some cases you have to wait for Facebook approval for a day or so. 
-> So we can't do this just at the workshop itself.
+| ![logo](exclamation.png) | The homework is very important because in some circumstances you have to wait for Facebook approval for a day or more. So we can't do this just at the workshop itself. |
+|---------------|:----|
 
-The homework consists of following things you should do before the workshop:
+The homework consists of following things you should do prior to the workshop:
 
 - Create Facebook account
 - Create Facebook developer account
@@ -34,7 +34,8 @@ I think I don't have to explain this step. I just wanted to be clear on this tha
 
 ### Create a Facebook developer account
 Go to [https://developers.facebook.com](https://developers.facebook.com) and create a developer
-account.
+account. In some cases you have to wait for the approval from facebook. This can take some hours
+to be completed.
 
 ### Facebook page
 Your chatbot will run on a Facebook page. Therefore we create our own page for this bot. Go to
@@ -54,7 +55,7 @@ every page type.
 When you finished the input, click on `Get Started`. You will be forwarded to the setup assistant.
 Fill out as much as you need. After some steps you will have your own Facebook page.
 
-You can make it people easyer to get in touch with your chatbot by adding a Messenger button to your
+You can make it easyer for visitors to get in touch with your chatbot by adding a Messenger button to your
 page:
 
 <img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage3.png" width="400">
@@ -83,12 +84,12 @@ On your newly created app click `+ Add Product` and choose Messenger.
 
 ### Get the code
 
-Now you should check out this project and import it to your IDE. Build the project in the IDE or enter
+Now you should check out [this project](https://github.com/chatbot-workshop/java-messenger-watchdog) and import it to your IDE. Build the project in the IDE or enter
 following command in your shell: `./gradlew build`. If you got no error in the IDE and a successful build
 you are ready to start the workshop.
 
-> `EOHW`: End Of Home Work. The homework part is done here. We are looking at following things at the 
-> workshop. 
+| ![logo](exclamation.png) | Homework finished! Thank you for preparing yourself properly! |
+|---------------|:----|
 
 ### Communication between your app and Facebook
 
