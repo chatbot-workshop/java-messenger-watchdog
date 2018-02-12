@@ -16,6 +16,9 @@ I expect you to be familiar with following technologies and concepts:
 - Your IDE (preferably IntelliJ IDEA or Eclipse)
 - Build and dependency management tool (preferably gradle)
 
+You should also be prepared to give Facebook some of your personal data. You can't create a Facebook app without revealing
+your mobile number.
+
 ## Homework before the workshop starts
 There are some things you have to do before we can start the workshop.
 
@@ -37,8 +40,9 @@ I think I don't have to explain this step. I just wanted to be clear on this tha
 
 ### Create a Facebook developer account
 Go to [https://developers.facebook.com](https://developers.facebook.com) and create a developer
-account. In some cases you have to wait for the approval from facebook. This can take some hours
-to be completed.
+account. Be prepared to enter your phone number! You will receive a verification code which you
+have to enter again. In some cases you have to wait for the approval from facebook.
+This can take some hours to be completed.
 
 ### Facebook page
 Your chatbot will run on a Facebook page. Therefore we create our own page for this bot. Go to
