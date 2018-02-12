@@ -9,6 +9,13 @@ This project was used for a workshop I gave for the ![Java User Group Switzerlan
 Therefore this readme is made to guide you through the process of bringing this chatbot to life and
 continue to implement your own ideas.
 
+## Preconditions
+I expect you to be familiar with following technologies and concepts:
+
+- The java programming language
+- Your IDE (preferably IntelliJ IDEA or Eclipse)
+- Build and dependency management tool (preferably gradle)
+
 ## Homework before the workshop starts
 There are some things you have to do before we can start the workshop.
 
@@ -23,11 +30,7 @@ The homework consists of following things you should do prior to the workshop:
 - Create Facebook app
 - Checkout this project
 
-To make us more efficient at the workshop you should also be familiar with:
-
-- The java programming language
-- Your IDE (preferably IntelliJ IDEA or Eclipse)
-- Gradle as your build tool
+Don't hesitate to contact me through [Issues](https://github.com/chatbot-workshop/java-messenger-watchdog/issues) if you have questions or troubles to get the homework done.
 
 ### Create a Facebook account
 I think I don't have to explain this step. I just wanted to be clear on this that you need it.
