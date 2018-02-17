@@ -22,7 +22,7 @@ your mobile number.
 ## Homework before the workshop starts
 There are some things you have to do before we can start the workshop.
 
-| ![logo](exclamation.png) | The homework is very important because in some circumstances you have to wait for Facebook approval for a day or more. So we can't do this just at the workshop itself. |
+| ![logo](doc_images/exclamation.png) | The homework is very important because in some circumstances you have to wait for Facebook approval for a day or more. So we can't do this just at the workshop itself. |
 |---------------|:----|
 
 The homework consists of following things you should do prior to the workshop:
@@ -48,16 +48,16 @@ This can take some hours to be completed.
 Your chatbot will run on a Facebook page. Therefore we create our own page for this bot. Go to
 [Facebook](https://www.facebook.com/) and click the icon on the top left corner:
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage0.png" width="200">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage0.png" width="200">
 
 Now you can create a page by clicking at the verry bottom of the left menu:
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage1.png" width="200">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage1.png" width="200">
 
 Now you have to choose a page type. It does not matter what you choose. You can create a chatbot for
 every page type.
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage2.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage2.png" width="400">
 
 When you finished the input, click on `Get Started`. You will be forwarded to the setup assistant.
 Fill out as much as you need. After some steps you will have your own Facebook page.
@@ -65,14 +65,14 @@ Fill out as much as you need. After some steps you will have your own Facebook p
 You can make it easyer for visitors to get in touch with your chatbot by adding a Messenger button to your
 page:
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage3.png" width="400">
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage4.png" width="400">
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage5.png" width="400">
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage6.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage3.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage4.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage5.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage6.png" width="400">
 
 Now you can open the messenger window by testing your new button:
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createFacebookPage7.png" width="400">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage7.png" width="400">
 
 
 ### Create a Facebook app
@@ -80,14 +80,14 @@ With a Facebook app you get the access to various APIs. For our chatbot we need 
 
 First go to [https://developers.facebook.com](https://developers.facebook.com) with your newly created
 developer account. Click on `My Apps` and then `Add a New App`.
-![create Facebook App](createFacebookApp.png)
+![create Facebook App](doc_images/createFacebookApp.png)
 
 Now enter the display name and contact e-mail of your app and click `Create App ID`.
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/createANewAppId.png" width="500">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createANewAppId.png" width="500">
 
 On your newly created app click `+ Add Product` and choose Messenger.
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/addMessengerAPI.png" width="500">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/addMessengerAPI.png" width="500">
 
 ### Get the code
 
@@ -95,7 +95,7 @@ Now you should check out [this project](https://github.com/chatbot-workshop/java
 following command in your shell: `./gradlew build`. If you got no error in the IDE and a successful build
 you are ready to start the workshop.
 
-| ![logo](exclamation.png) | Homework finished! Thank you for preparing yourself properly! |
+| ![logo](doc_images/exclamation.png) | Homework finished! Thank you for preparing yourself properly! |
 |---------------|:----|
 
 ### Communication between your app and Facebook
@@ -103,7 +103,7 @@ you are ready to start the workshop.
 First we want to have a look at how the Facebook API looks like.
 This diagram shows how your chatbot will talk to facebook and vice versa:
 
-![Productive Deployment](ProductiveDeployment.png)
+![Productive Deployment](doc_images/ProductiveDeployment.png)
 
 1. First there is a verification step before Facebook is willing to communicate with your chatbot.
 Facebook will fist call your chatbot using an http GET request to your **webhook** with a secret that
@@ -123,7 +123,7 @@ probably doesn't have a public domain and certificate. But you can use a service
 [ngrok](https://ngrok.com/) to solve this problem. Now the communication channel for development
 environment looks like this:
 
-![Development Deployment](DevelopmentDeployment.png)
+![Development Deployment](doc_images/DevelopmentDeployment.png)
 
 [Ngrok](https://ngrok.com/) basically creates a new domain on the fly and routes all the traffic to
 your machine. You can download ngrok from their website and run with following command:
@@ -174,7 +174,7 @@ you make the last configuration in your Facebook app: You set the webhook:
 - Finally you choose your field subscriptions. Here you can define which events should be forwarded
   to your webhook.
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/setupWebhook.png" width="500">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/setupWebhook.png" width="500">
 
 
 ## Run this app
