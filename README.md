@@ -145,8 +145,8 @@ Forwarding                    http://797af51b.ngrok.io -> localhost:8080
 Forwarding                    https://797af51b.ngrok.io -> localhost:8080
 ```
 
-Now you have your own ngrok domain and certificate. Just use following url als your webhook:
-`https://797af51b.ngrok.io/callback`
+Now you have your own ngrok domain and certificate. Use the https forwarding url as your webhook:
+`https://797af51b.ngrok.io/webhook`
 
 
 ### Connect Facebook app to your chatbot
@@ -166,7 +166,7 @@ Finally create your own personal string to use as a **verify token** and also se
 Now you should start `ngrok` and use your IDE or `gradle` to start the chatbot. If it is running
 you make the last configuration in your Facebook app: You set the webhook:
 
-- **Webhook-URL**: The URL to your server. For example `https://my-app.mydomain.com/callback`. If you 
+- **Webhook-URL**: The URL to your server. For example `https://my-app.mydomain.com/webhook`. If you 
   run your app on your local development machine you should use the domain that `ngrok` is telling you.
 
 - **Verify token**: The same string you previously set in `application.properties`.

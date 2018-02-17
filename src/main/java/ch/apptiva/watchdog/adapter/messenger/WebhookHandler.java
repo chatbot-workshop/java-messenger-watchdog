@@ -45,15 +45,15 @@ import static com.github.messenger4j.MessengerPlatform.VERIFY_TOKEN_REQUEST_PARA
  * lots of json stuff.
  */
 @RestController
-@RequestMapping("/callback")
-public class CallbackHandler {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CallbackHandler.class);
+@RequestMapping("/webhook")
+public class WebhookHandler {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebhookHandler.class);
   private final MessengerReceiveClient receiveClient;
   private final MessengerSendClient sendClient;
   private final WebsiteRepository websiteRepository;
 
   @Autowired
-  public CallbackHandler(@Value("${messenger.appSecret}") final String appSecret,
+  public WebhookHandler(@Value("${messenger.appSecret}") final String appSecret,
                          @Value("${messenger.verifyToken}") final String verifyToken,
                          final MessengerSendClient sendClient,
                          final WebsiteRepository websiteRepository) {
@@ -96,9 +96,9 @@ public class CallbackHandler {
    * @return
    */
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<Void> handleCallback(@RequestBody final String payload,
+  public ResponseEntity<Void> handleWebhook(@RequestBody final String payload,
                                              @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
-    LOGGER.info("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
+    LOGGER.info("Received Messenger Platform webhook - payload: {} | signature: {}", payload, signature);
     try {
       this.receiveClient.processCallbackPayload(payload, signature);
       LOGGER.debug("Processed callback payload successfully");
