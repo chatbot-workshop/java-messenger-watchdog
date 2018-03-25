@@ -179,9 +179,9 @@ make the last configuration in your Facebook app: You set the webhook:
 - Finally subscribe the page events to your app. This can be done in the messenger product settings.
   See screenshot bellow.
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/setupWebhook1.png" width="500">
+![Setup Webhook](doc_images/setupWebhook.png)
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/setupWebhook2.png" width="500">
+![Connect Page](doc_images/connectPageToApp.png)
 
 
 ## Run this app
@@ -196,7 +196,7 @@ or IntelliJ. To run the app you simply start the `main` method from
 |`messenger.appSecret`| You find this secret on your Facebook app Dashboard. It identifies you as the owner of the app. |
 |`messenger.verifyToken`| This token is sent to you when someone sets a new webhook to your url. It makes sure no one else can use your process to run his own chatbot. |
 
-## Architecture overview
+## Architectural overview
 
 I tried to apply a [Hexagonal Architecture Style](http://alistair.cockburn.us/Hexagonal+architecture)
 This made it easy to separate the domain model from the facebook API usage. So you can focus on
