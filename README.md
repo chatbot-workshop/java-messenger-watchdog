@@ -27,24 +27,24 @@ There are some things you have to do before we can start the workshop.
 
 The homework consists of following things you should do prior to the workshop:
 
-- Create Facebook account
-- Create Facebook developer account
-- Create Facebook page
-- Create Facebook app
-- Checkout this project
+- [Create Facebook account](#create-facebook-account)
+- [Create Facebook developer account](#create-facebook-developer-account)
+- [Create Facebook page](#create-facebook-page)
+- [Create Facebook app](#create-facebook-page)
+- [Clone this project](#clone-this-project)
 
 Don't hesitate to contact me through [Issues](https://github.com/chatbot-workshop/java-messenger-watchdog/issues) if you have questions or troubles to get the homework done.
 
-### Create a Facebook account
+### Create Facebook account
 I think I don't have to explain this step. I just wanted to be clear on this that you need it.
 
-### Create a Facebook developer account
+### Create Facebook developer account
 Go to [https://developers.facebook.com](https://developers.facebook.com) and create a developer
 account. Be prepared to enter your phone number! You will receive a verification code which you
 have to enter again. In some cases you have to wait for the approval from facebook.
 This can take some hours to be completed.
 
-### Facebook page
+### Create Facebook page
 Your chatbot will run on a Facebook page. Therefore we create our own page for this bot. Go to
 [Facebook](https://www.facebook.com/) and click the icon on the top left corner:
 
@@ -75,7 +75,7 @@ Now you can open the messenger window by testing your new button:
 <img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/createFacebookPage7.png" width="400">
 
 
-### Create a Facebook app
+### Create Facebook app
 With a Facebook app you get the access to various APIs. For our chatbot we need the messenger APIs.
 
 First go to [https://developers.facebook.com](https://developers.facebook.com) with your newly created
@@ -89,7 +89,7 @@ On your newly created app click `+ Add Product` and choose Messenger.
 
 <img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/addMessengerAPI.png" width="500">
 
-### Get the code
+### Clone this project
 
 Now you should check out [this project](https://github.com/chatbot-workshop/java-messenger-watchdog) and import it to your IDE. Build the project in the IDE or enter
 following command in your shell: `./gradlew build`. If you got no error in the IDE and a successful build
@@ -149,32 +149,39 @@ Now you have your own ngrok domain and certificate. Use the https forwarding url
 `https://797af51b.ngrok.io/webhook`
 
 
-### Connect Facebook app to your chatbot
+### Connect Facebook page and app to your chatbot
 
-Next we are going to actually connect your chatbot. To do this we have to set some properties and
-tell Facebook where your chatbot is living.
+Next we are going to actually connect the dots. To do this we have to set some properties and
+tell Facebook where your chatbot is running.
 
-At the Facebook app dashboard find the **app secret**. Take this secret and set it in the
+At the Facebook app at `Settings / Basics` find the **app secret**. Take this secret and set it in the
 file `application.properties`.
 
 Also in your Facebook App look for **Token Generation**. There you can select your site and let 
 facebook generate a **page access token**. Save this token at your file `application.properties`.
 
+![Token Generation](doc_images/tokenGeneration.png)
+
 Finally create your own personal string to use as a **verify token** and also set it in
 `application.properties`. In this README I used `watchdog`.
 
-Now you should start `ngrok` and use your IDE or `gradle` to start the chatbot. If it is running
-you make the last configuration in your Facebook app: You set the webhook:
+Now make sure `ngrok` is running and use your IDE or `gradle` to start the chatbot. If it is running
+make the last configuration in your Facebook app: You set the webhook:
 
 - **Webhook-URL**: The URL to your server. For example `https://my-app.mydomain.com/webhook`. If you 
   run your app on your local development machine you should use the domain that `ngrok` is telling you.
 
 - **Verify token**: The same string you previously set in `application.properties`.
 
-- Finally you choose your field subscriptions. Here you can define which events should be forwarded
-  to your webhook.
+- Now choose your field subscriptions. Here you can define which events should be forwarded
+  to your webhook. Select `messages`.
+  
+- Finally subscribe the page events to your app. This can be done in the messenger product settings.
+  See screenshot bellow.
 
-<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/setupWebhook.png" width="500">
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/setupWebhook1.png" width="500">
+
+<img src="https://raw.githubusercontent.com/chatbot-workshop/java-messenger-watchdog/master/doc_images/setupWebhook2.png" width="500">
 
 
 ## Run this app
