@@ -24,6 +24,8 @@ public class IntentAnalyzer {
         if (url.isPresent()) {
           intent = new WatchWebsite(url.get());
         }
+      } else if (message.toLowerCase().matches(".*(seiten|läuft).*")) {
+        intent = new GetStatistics();
       }
     } catch (MalformedURLException e) {
       intent = new HelpReply();
