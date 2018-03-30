@@ -11,7 +11,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-public class SiteStatisticsGraph {
+public class SiteStatisticsChart {
 
     public static byte[] generateStatImage(SiteStatistic statistics) throws IOException {
         XYSeries series = new XYSeries(statistics.url().toString());
@@ -27,8 +27,6 @@ public class SiteStatisticsGraph {
         xyPlot.setBackgroundPaint(new Color(250, 250, 250));
         xyPlot.setDomainGridlinePaint(Color.lightGray);
         xyPlot.setRangeGridlinePaint(Color.lightGray);
-
-        // ChartUtils.saveChartAsPNG(new File("stats.png"), chart, 400, 300);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(outputStream, chart, 400, 300);

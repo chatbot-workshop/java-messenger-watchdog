@@ -54,7 +54,7 @@ public class SiteStatisticTest {
         assertThat(statistic.upPercentage(), is(76));
 
         try {
-            String imageBytes = SiteStatisticsGraph.generateStatImage(statistic);
+            byte[] imageBytes = SiteStatisticsChart.generateStatImage(statistic);
         } catch (IOException e) {
             e.printStackTrace();
         }
