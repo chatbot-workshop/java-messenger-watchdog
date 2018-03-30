@@ -2,17 +2,17 @@ package ch.apptiva.watchdog.domain.core.model;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 public class SiteStatistic {
 
     private final URL url;
     private final int upPercentage;
-    private final int responseTimeMillis1Hour;
-    private final int responseTimeMillis30Min;
-    private final int responseTimeMillis15Min;
-    private final int responseTimeMillis5Min;
-    private final int responseTimeMillis1Min;
+    private final Map<Long, Long> data;
     private final HttpStatus currentStatus;
 
     public SiteStatistic(Website website) {
@@ -22,19 +22,13 @@ public class SiteStatistic {
 
         LocalDateTime lastHour = website.currentResult().map(TestResult::dateTime).map(dt -> dt.minusHours(1))
             .orElse(LocalDateTime.now());
-        responseTimeMillis1Hour = average(lastHour, results);
-        responseTimeMillis30Min = average(lastHour.plusMinutes(30), results);
-        responseTimeMillis15Min = average(lastHour.plusMinutes(45), results);
-        responseTimeMillis5Min = average(lastHour.plusMinutes(55), results);;
-        responseTimeMillis1Min = average(lastHour.plusMinutes(59), results);;
         currentStatus = website.currentResult().map(TestResult::httpStatus).orElse(null);
-    }
 
-    private static int average(LocalDateTime resultsAfter, Queue<TestResult> results) {
-        return (int) results.stream()
-            .filter(tr -> tr.dateTime().isAfter(resultsAfter))
-            .mapToLong(tr -> tr.responseTime().toMillis()).average()
-            .orElse(0.0);
+        data = results.stream().filter(tr -> tr.dateTime().isAfter((lastHour)))
+            .collect(Collectors.toMap(
+                (tr) -> lastHour.plusHours(1).until(tr.dateTime(), ChronoUnit.MINUTES),
+                (tr) -> tr.responseTime().toMillis()
+            ));
     }
 
     public URL url() {
@@ -49,23 +43,7 @@ public class SiteStatistic {
         return currentStatus;
     }
 
-    public int responseTimeMillis1Hour() {
-        return responseTimeMillis1Hour;
-    }
-
-    public int responseTimeMillis30Min() {
-        return responseTimeMillis30Min;
-    }
-
-    public int responseTimeMillis15Min() {
-        return responseTimeMillis15Min;
-    }
-
-    public int responseTimeMillis5Min() {
-        return responseTimeMillis5Min;
-    }
-
-    public int responseTimeMillis1Min() {
-        return responseTimeMillis1Min;
+    public Map<Long, Long> data() {
+        return Collections.unmodifiableMap(data);
     }
 }

@@ -92,7 +92,6 @@ public class Website extends Entity {
         if (newTestResult.isOk()) {
             failedTestResultConter = 0;
             if (newTestResult.isDifferentFrom(currentResult)) {
-                System.out.println("online");
                 eventPublisher.publishWebsiteOnlineEvent(new WebsiteOnlineEvent(this.uuid));
             }
         } else {

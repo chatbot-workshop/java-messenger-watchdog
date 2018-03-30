@@ -9,13 +9,13 @@ import static org.mockito.Mockito.when;
 
 import ch.apptiva.watchdog.domain.core.service.EventPublisher;
 import ch.apptiva.watchdog.domain.core.service.TestService;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.stream.IntStream;
-import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.junit.Test;
 
 public class SiteStatisticTest {
@@ -41,7 +41,7 @@ public class SiteStatisticTest {
                 new TestResult(of(date, LocalTime.of(18, 45)), OK, ofMillis(380)),//
                 new TestResult(of(date, LocalTime.of(18, 50)), OK, ofMillis(400)),//
                 new TestResult(of(date, LocalTime.of(18, 55)), OK, ofMillis(420)),//
-                new TestResult(of(date, LocalTime.of(18, 59)), NotFound, ofMillis(440))//
+                new TestResult(of(date, LocalTime.of(19, 0)), NotFound, ofMillis(440))//
         };
         when(testService.testWebsite(website)).thenReturn(testResults[0], Arrays.copyOfRange(testResults, 1, testResults.length));
         EventPublisher eventPublisher = mock(EventPublisher.class);
@@ -52,38 +52,12 @@ public class SiteStatisticTest {
 
         assertThat(statistic.currentStatus(), is(NotFound));
         assertThat(statistic.upPercentage(), is(76));
-        assertThat(statistic.responseTimeMillis1Hour(), is(320));
-        assertThat(statistic.responseTimeMillis30Min(), is(380));
-        assertThat(statistic.responseTimeMillis15Min(), is(410));
-        assertThat(statistic.responseTimeMillis5Min(), is(430));
-        assertThat(statistic.responseTimeMillis1Min(), is(440));
+
+        try {
+            String imageBytes = SiteStatisticsGraph.generateStatImage(statistic);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Test
-    public void testQueue() {
-        CircularFifoQueue<String> queue = new CircularFifoQueue<>(5);
-        queue.add("1");
-        queue.add("2");
-        queue.add("3");
-
-        assertThat(queue.peek(), is("1"));
-        assertThat(queue.get(queue.size() - 1), is("3"));
-
-        queue.add("4");
-        queue.add("5");
-        assertThat(queue.peek(), is("1"));
-        assertThat(queue.get(queue.size()-1), is("5"));
-        assertThat(queue.size(), is(5));
-
-        queue.add("6");
-        assertThat(queue.peek(), is("2"));
-        assertThat(queue.get(queue.size()-1), is("6"));
-        assertThat(queue.size(), is(5));
-
-        queue.add("7");
-        assertThat(queue.peek(), is("3"));
-        assertThat(queue.get(queue.size()-1), is("7"));
-        assertThat(queue.size(), is(5));
-
-    }
 }
