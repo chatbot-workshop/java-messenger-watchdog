@@ -22,6 +22,9 @@ import com.github.messenger4j.receive.MessengerReceiveClient;
 import com.github.messenger4j.receive.handlers.EchoMessageEventHandler;
 import com.github.messenger4j.receive.handlers.TextMessageEventHandler;
 import com.github.messenger4j.send.MessengerSendClient;
+import com.github.messenger4j.send.templates.GenericTemplate;
+import com.github.messenger4j.send.templates.GenericTemplate.Element.ListBuilder;
+import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,12 +133,27 @@ public class WebhookHandler {
                     websiteRepository.persist(website);
                     sendTextMessage(senderId, "OK, wird gemacht");
                 } else if (intent instanceof GetStatistics) {
-                    // TODO
+                    sendStatisticsCarousel(senderId);
                 }
             } catch (MessengerApiException | MessengerIOException e) {
                 handleSendException(e);
             }
         };
+    }
+
+    private void sendStatisticsCarousel(String senderId) {
+        ListBuilder listBuilder = GenericTemplate.newBuilder().addElements();
+        Collection<Website> websites = websiteRepository.findByUser(new UserId(senderId));
+        websites.forEach(w -> {
+            listBuilder.addElement(w.url().toString())
+                .subtitle(w.currentResult().map(tr -> tr.isOk()?"online":"offline").orElse("unbekannt"));
+        });
+        GenericTemplate genericTemplate = listBuilder.done().build();
+        try {
+            this.sendClient.sendTemplate(senderId, genericTemplate);
+        } catch (MessengerApiException | MessengerIOException e) {
+            handleSendException(e);
+        }
     }
 
     private void handleSendException(Exception e) {
