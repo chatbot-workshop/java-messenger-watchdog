@@ -1,4 +1,6 @@
 package ch.apptiva.watchdog.domain.shared;
 
-public class ValueObject {
+import java.io.Serializable;
+
+public class ValueObject implements Serializable {
 }

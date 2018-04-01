@@ -3,6 +3,7 @@ package ch.apptiva.watchdog.domain.core.model;
 import ch.apptiva.watchdog.domain.core.service.EventPublisher;
 import ch.apptiva.watchdog.domain.core.service.TestService;
 import ch.apptiva.watchdog.domain.shared.Entity;
+import java.io.Serializable;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.util.Queue;
 import java.util.UUID;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-public class Website extends Entity {
+public class Website extends Entity implements Serializable {
 
     private final static int FAILED_TEST_FIRE_EVENT_TREASHHOLD = 3;
 

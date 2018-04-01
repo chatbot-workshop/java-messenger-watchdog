@@ -61,7 +61,7 @@ public class WebhookHandler {
             final MessengerSendClient sendClient, final WebsiteRepository websiteRepository, StatisticService statisticService) {
         this.statisticService = statisticService;
         this.receiveClient =
-                MessengerPlatform.newReceiveClientBuilder(appSecret, verifyToken).onEchoMessageEvent(newEchoMessageEventHandler()).onTextMessageEvent(newTextMessageEventHandler())
+                MessengerPlatform.newReceiveClientBuilder(appSecret, verifyToken).onTextMessageEvent(newTextMessageEventHandler())
                         // You may register here many more handlers to make an even better bot.
                         .build();
         this.sendClient = sendClient;
