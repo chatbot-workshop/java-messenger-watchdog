@@ -41,17 +41,17 @@ public class MapDBWebsiteRepository implements WebsiteRepository {
 
     @Override
     public Website findByUrl(URL url) {
-        return getWebsiteMap().getValues().stream().filter(website -> website.url().equals(url)).findAny().get();
+        return findAll().stream().filter(website -> website.url().equals(url)).findAny().get();
     }
 
     @Override
     public Collection<Website> findByUser(UserId userId) {
-        return getWebsiteMap().getValues().stream().filter(website -> website.userId().equals(userId)).collect(Collectors.toList());
+        return findAll().stream().filter(website -> website.userId().equals(userId)).collect(Collectors.toList());
     }
 
     @Override
     public Collection<Website> findAll() {
-        return Collections.unmodifiableCollection(new ArrayList<>(websites));
+        return Collections.unmodifiableCollection(new ArrayList<>(getWebsiteMap().getValues()));
     }
 
     public HTreeMap<UUID, Website> getWebsiteMap() {
