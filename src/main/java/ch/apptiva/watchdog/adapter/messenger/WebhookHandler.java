@@ -4,7 +4,10 @@ import static com.github.messenger4j.MessengerPlatform.CHALLENGE_REQUEST_PARAM_N
 import static com.github.messenger4j.MessengerPlatform.MODE_REQUEST_PARAM_NAME;
 import static com.github.messenger4j.MessengerPlatform.SIGNATURE_HEADER_NAME;
 import static com.github.messenger4j.MessengerPlatform.VERIFY_TOKEN_REQUEST_PARAM_NAME;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import ch.apptiva.watchdog.adapter.web.StatisticsImageRestController;
 import ch.apptiva.watchdog.domain.conversation.GetStatistics;
 import ch.apptiva.watchdog.domain.conversation.Intent;
 import ch.apptiva.watchdog.domain.conversation.IntentAnalyzer;
@@ -24,7 +27,10 @@ import com.github.messenger4j.receive.handlers.TextMessageEventHandler;
 import com.github.messenger4j.send.MessengerSendClient;
 import com.github.messenger4j.send.templates.GenericTemplate;
 import com.github.messenger4j.send.templates.GenericTemplate.Element.ListBuilder;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +45,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This Controller receives all Facebook Messenger hooks from your chat users. There are two entry points:
- * <p>
- * 1. GET Request: Used only for the registration of the hook.
- * 2. POST Request: Used for all Facebook hooks from text messages till uploads.
- * <p>
- * We use the library messenger4j to work with the messenger API. This frees us from parsing and composing
- * lots of json stuff.
+ * This Controller receives all Facebook Messenger hooks from your chat users. There are two entry points: <p> 1. GET
+ * Request: Used only for the registration of the hook. 2. POST Request: Used for all Facebook hooks from text messages
+ * till uploads. <p> We use the library messenger4j to work with the messenger API. This frees us from parsing and
+ * composing lots of json stuff.
  */
 @RestController
 @RequestMapping("/webhook")
 public class WebhookHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(WebhookHandler.class);
     private final MessengerReceiveClient receiveClient;
     private final MessengerSendClient sendClient;
@@ -57,13 +61,16 @@ public class WebhookHandler {
     private final StatisticService statisticService;
 
     @Autowired
-    public WebhookHandler(@Value("${messenger.appSecret}") final String appSecret, @Value("${messenger.verifyToken}") final String verifyToken,
-            final MessengerSendClient sendClient, final WebsiteRepository websiteRepository, StatisticService statisticService) {
+    public WebhookHandler(@Value("${messenger.appSecret}") final String appSecret,
+        @Value("${messenger.verifyToken}") final String verifyToken,
+        final MessengerSendClient sendClient, final WebsiteRepository websiteRepository,
+        StatisticService statisticService) {
         this.statisticService = statisticService;
         this.receiveClient =
-                MessengerPlatform.newReceiveClientBuilder(appSecret, verifyToken).onTextMessageEvent(newTextMessageEventHandler())
-                        // You may register here many more handlers to make an even better bot.
-                        .build();
+            MessengerPlatform.newReceiveClientBuilder(appSecret, verifyToken)
+                .onTextMessageEvent(newTextMessageEventHandler())
+                // You may register here many more handlers to make an even better bot.
+                .build();
         this.sendClient = sendClient;
         this.websiteRepository = websiteRepository;
     }
@@ -71,16 +78,15 @@ public class WebhookHandler {
     /**
      * This will be called when you register the webhook. Use it to check the verifyToken.
      *
-     * @param mode
      * @param verifyToken Verify Token which you have been entering at registering the webhook.
-     * @param challenge
-     * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode, @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
-            @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
+    public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
+        @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
+        @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
 
-        LOGGER.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode, verifyToken, challenge);
+        LOGGER.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode,
+            verifyToken, challenge);
         try {
             return ResponseEntity.ok(this.receiveClient.verifyWebhook(mode, verifyToken, challenge));
         } catch (MessengerVerificationException e) {
@@ -90,15 +96,12 @@ public class WebhookHandler {
     }
 
     /**
-     * This is called on every event that is happening in your chat. This is the place where you answer
-     * every request from your users.
-     *
-     * @param payload
-     * @param signature
-     * @return
+     * This is called on every event that is happening in your chat. This is the place where you answer every request
+     * from your users.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> handleWebhook(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
+    public ResponseEntity<Void> handleWebhook(@RequestBody final String payload,
+        @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
         LOGGER.info("Received Messenger Platform webhook - payload: {} | signature: {}", payload, signature);
         try {
             this.receiveClient.processCallbackPayload(payload, signature);
@@ -141,18 +144,35 @@ public class WebhookHandler {
         };
     }
 
-    private void sendStatisticsCarousel(String senderId) {
+    private void sendStatisticsCarousel(String senderId) throws MessengerApiException, MessengerIOException {
         ListBuilder listBuilder = GenericTemplate.newBuilder().addElements();
         Collection<Website> websites = websiteRepository.findByUser(new UserId(senderId));
-        websites.forEach(w -> {
-            listBuilder.addElement(w.url().toString())
-                .subtitle(w.currentResult().map(tr -> tr.isOk()?"online":"offline").orElse("unbekannt"));
-        });
-        GenericTemplate genericTemplate = listBuilder.done().build();
-        try {
+        if (websites.isEmpty()) {
+            sendClient.sendTextMessage(senderId, "Aktuell überwache ich keine Webseiten.");
+        } else {
+            for (Website website : websites) {
+                String imageUrl = linkToChart(website.id()).toString();
+                // Currently images are not loaded if they are served by the same domain as the webhook...
+                listBuilder.addElement(website.url().toString())
+                    .subtitle(website.currentResult().map(tr -> tr.isOk() ? "online" : "offline").orElse("unbekannt"))
+                    .imageUrl(imageUrl)
+                    .itemUrl(imageUrl)
+                    .toList();
+
+                // sending a single image thought works:
+                // this.sendClient.sendImageAttachment(senderId, imageUrl);
+            }
+            GenericTemplate genericTemplate = listBuilder.done().build();
             this.sendClient.sendTemplate(senderId, genericTemplate);
-        } catch (MessengerApiException | MessengerIOException e) {
-            handleSendException(e);
+        }
+    }
+
+    private URL linkToChart(UUID uuid
+    ) {
+        try {
+            return linkTo(methodOn(StatisticsImageRestController.class).getImage(uuid)).toUri().toURL();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -160,7 +180,8 @@ public class WebhookHandler {
         LOGGER.warn("Cannot send message.", e);
     }
 
-    private void sendTextReply(String senderId, TextReplyIntent textReplyIntent) throws MessengerApiException, MessengerIOException {
+    private void sendTextReply(String senderId, TextReplyIntent textReplyIntent) throws
+        MessengerApiException, MessengerIOException {
         for (String line : textReplyIntent.replies()) {
             sendTextMessage(senderId, line);
         }

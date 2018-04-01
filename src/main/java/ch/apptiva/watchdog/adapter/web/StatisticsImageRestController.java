@@ -5,8 +5,7 @@ import ch.apptiva.watchdog.domain.core.model.SiteStatisticsChart;
 import ch.apptiva.watchdog.domain.core.model.Website;
 import ch.apptiva.watchdog.domain.core.repository.WebsiteRepository;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +25,9 @@ public class StatisticsImageRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "image/jpeg")
-    public ResponseEntity<byte[]> getImage(@RequestParam("url") String websiteUrlEncoded)
+    public ResponseEntity<byte[]> getImage(@RequestParam("uuid") UUID uuid)
         throws IOException {
-        String websiteUrl = URLDecoder.decode(websiteUrlEncoded, "utf-8");
-        Website website = websiteRepository.findByUrl(new URL(websiteUrl));
+        Website website = websiteRepository.findById(uuid);
         SiteStatistic statistic = new SiteStatistic(website);
         return ResponseEntity.ok(SiteStatisticsChart.generateStatImage(statistic));
     }
