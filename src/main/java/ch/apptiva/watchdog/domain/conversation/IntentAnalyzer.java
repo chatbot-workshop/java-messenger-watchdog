@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class IntentAnalyzer {
 
-  private static String URL_REGEX = "(http|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?";
+  private static String URL_REGEX = "(http|https)://([\\w_-]+(?:(?:[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?";
   private static Pattern URL_PATTERN = Pattern.compile(URL_REGEX, Pattern.CASE_INSENSITIVE);
 
   public static Intent analyzeIntent(String message) {
