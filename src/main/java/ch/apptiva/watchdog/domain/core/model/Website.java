@@ -97,8 +97,7 @@ public class Website extends Entity implements Serializable {
             }
         } else {
             failedTestResultConter++;
-            if (failedTestResultConter >= FAILED_TEST_FIRE_EVENT_TREASHHOLD) {
-                System.out.println("offline");
+            if (failedTestResultConter == FAILED_TEST_FIRE_EVENT_TREASHHOLD) {
                 eventPublisher.publishWebsiteOfflineEvent(new WebsiteOfflineEvent(this.uuid));
             }
         }
@@ -117,15 +116,18 @@ public class Website extends Entity implements Serializable {
         if (testService == null) {
             throw new IllegalArgumentException(("TestService must be set."));
         }
-        TestResult lastTestResult = testResults.peek();
-        if (lastTestResult == null) {
-            this.test(testService, eventPublisher);
-        } else {
+
+        Optional<TestResult> currentResult = currentResult();
+
+        currentResult.ifPresent((result) -> {
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime targetTime = lastTestResult.dateTime().plus(interval.toMillis(), ChronoUnit.MILLIS);
+            LocalDateTime targetTime = result.dateTime().plus(interval.toMillis(), ChronoUnit.MILLIS);
             if (targetTime.isBefore(now)) {
                 this.test(testService, eventPublisher);
             }
+        });
+        if (!currentResult.isPresent()) {
+            this.test(testService, eventPublisher);
         }
     }
 
