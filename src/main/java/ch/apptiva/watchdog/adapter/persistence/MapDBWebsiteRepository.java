@@ -54,7 +54,13 @@ public class MapDBWebsiteRepository implements WebsiteRepository {
         return Collections.unmodifiableCollection(new ArrayList<>(getWebsiteMap().getValues()));
     }
 
-    public HTreeMap<UUID, Website> getWebsiteMap() {
+    @Override
+    public void delete(Website website) {
+        getWebsiteMap().remove(website.id());
+        mapDB.commit();
+    }
+
+    private HTreeMap<UUID, Website> getWebsiteMap() {
         return mapDB.<UUID, Website>hashMap(SITES_MAP_NAME, Serializer.UUID, Serializer.JAVA).createOrOpen();
     }
 }

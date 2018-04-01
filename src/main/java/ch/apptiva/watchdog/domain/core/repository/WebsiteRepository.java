@@ -18,4 +18,6 @@ public interface WebsiteRepository {
     public Collection<Website> findByUser(UserId userId);
 
     public Collection<Website> findAll();
+
+    public void delete(Website website);
 }

@@ -9,6 +9,7 @@ import ch.apptiva.watchdog.domain.conversation.GetStatistics;
 import ch.apptiva.watchdog.domain.conversation.Intent;
 import ch.apptiva.watchdog.domain.conversation.IntentAnalyzer;
 import ch.apptiva.watchdog.domain.conversation.TextReplyIntent;
+import ch.apptiva.watchdog.domain.conversation.UnwatchWebsite;
 import ch.apptiva.watchdog.domain.conversation.WatchWebsite;
 import ch.apptiva.watchdog.domain.core.model.UserId;
 import ch.apptiva.watchdog.domain.core.model.Website;
@@ -129,6 +130,11 @@ public class WebhookHandler {
                     Website website = new Website(watchWebsite.url(), new UserId(senderId));
                     websiteRepository.persist(website);
                     sendTextMessage(senderId, "OK, wird gemacht");
+                } else if (intent instanceof UnwatchWebsite) {
+                    UnwatchWebsite unwatchWebsite = (UnwatchWebsite)intent;
+                    Website website = websiteRepository.findByUrl(unwatchWebsite.url());
+                    websiteRepository.delete(website);
+                    sendTextMessage(senderId, "OK. " + website.url() + " wurde gelöscht.");
                 } else if (intent instanceof GetStatistics) {
                     // TODO
                 }
