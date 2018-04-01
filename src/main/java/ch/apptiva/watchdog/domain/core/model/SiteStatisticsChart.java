@@ -19,7 +19,7 @@ public class SiteStatisticsChart {
         XYSeriesCollection seriesCollection = new XYSeriesCollection();
         seriesCollection.addSeries(series);
 
-        JFreeChart chart = ChartFactory.createXYLineChart(statistics.url().toString(), "minutes ago", "milliseconds", seriesCollection,
+        JFreeChart chart = ChartFactory.createXYLineChart(statistics.url().toString(), "seconds ago", "milliseconds", seriesCollection,
             PlotOrientation.VERTICAL, false, false, false
         );
 

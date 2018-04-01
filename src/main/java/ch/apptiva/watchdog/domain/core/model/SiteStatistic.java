@@ -26,7 +26,7 @@ public class SiteStatistic {
 
         data = results.stream().filter(tr -> tr.dateTime().isAfter((lastHour)))
             .collect(Collectors.toMap(
-                (tr) -> lastHour.plusHours(1).until(tr.dateTime(), ChronoUnit.MINUTES),
+                (tr) -> lastHour.plusHours(1).until(tr.dateTime(), ChronoUnit.SECONDS),
                 (tr) -> tr.responseTime().toMillis()
             ));
     }
