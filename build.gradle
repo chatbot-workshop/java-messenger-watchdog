@@ -30,7 +30,7 @@ dependencies {
 
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
     compile group: 'com.github.messenger4j', name: 'messenger4j', version: '0.8.0'
-    compile group: 'org.jfree', name: 'jfreechart', version: '1.5.0'
+    compile group: 'org.jfree', name: 'jfreechart', version: '1.5.3'
     compile group: 'org.mapdb', name: 'mapdb', version: '3.0.8'
 
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
