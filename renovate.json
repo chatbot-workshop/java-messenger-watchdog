@@ -4,21 +4,28 @@
     "config:base",
     ":disableDependencyDashboard"
   ],
+  "ignorePaths": [
+    "Dockerfile",
+    "package.json",
+    "pnpm-lock.yaml"
+  ],
   "assignees": [
-    "McPringle"
+    "romixch"
   ],
   "reviewers": [
-    "McPringle"
+    "romixch"
   ],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
+      "automergeType": "branch",
       "commitMessagePrefix" : "⬆️ "
     },
     {
       "matchDepTypes": ["devDependencies"],
       "automerge": true,
+      "automergeType": "branch",
       "commitMessagePrefix" : "⬆️ "
     }
   ],
